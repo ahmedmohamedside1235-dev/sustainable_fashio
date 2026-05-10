@@ -1,0 +1,61 @@
+body {
+    background-image: url('/assets/register/images/signup.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem 0;
+}
+.login-card {
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+}
+
+.btn-login {
+    background: #e6566c;
+    color: #fff;
+    width: 100%;
+    padding: 12px;
+    font-weight: bold;
+}
+
+.btn-login:hover {
+    background: #cc5466;
+    color: #fff;
+}
+
+.head {
+    background-color: #f1455f;
+    color: #fff;
+}
+
+.mainColor {
+    color: #e6566c;
+}
+
+
+.message {
+    position: fixed;
+    top: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 15px 30px;
+    border-radius: 10px;
+    color: white;
+    font-weight: bold;
+    transition: 0.5s;
+    z-index: 9999;
+}
+
+.message.success {
+    background: rgb(202, 79, 79);
+    color: #fff;
+}
+
+.message.show {
+    top: 40px;
+}

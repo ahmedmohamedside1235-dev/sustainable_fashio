@@ -1,0 +1,108 @@
+/* ── Navbar ── */
+.navbar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.85) !important;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+    transition: 0.3s;
+}
+
+.navbar-nav li {
+    margin-right: 5px;
+}
+
+.navbar-nav .nav-link {
+    position: relative;
+    color: #333;
+    font-weight: 500;
+    padding: 6px 14px !important;
+    border-radius: 8px;
+    transition: all 0.25s ease;
+}
+
+.navbar-nav .nav-link::after {
+    display: none;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #198754;
+    background: rgba(25, 135, 84, 0.08);
+    transform: translateY(-1px);
+}
+
+.navbar-nav .nav-link.active {
+    color: #198754;
+    font-weight: 600;
+    background: rgba(25, 135, 84, 0.1);
+}
+
+.dropdown-menu {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    padding: 8px;
+    min-width: 160px;
+}
+
+.brand-icon {
+    width: 32px;
+    height: 32px;
+    background: #198754;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 16px;
+}
+
+.dropdown-item {
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 14px;
+    color: #333;
+    transition: 0.2s;
+}
+
+.dropdown-item:hover {
+    background: rgba(25, 135, 84, 0.1);
+    color: #198754;
+}
+
+.dropdown-item:last-child {
+    color: #dc3545;
+}
+
+.dropdown-item.logout:last-child:hover {
+    background: rgba(220, 53, 69, 0.08);
+    color: #dc3545;
+}
+
+/* Request button */
+.request-btn {
+    background: transparent;
+    border: 1.5px solid #2C5F2D;
+    color: #2C5F2D;
+    padding: 5px 8px;
+    border-radius: 8px;
+    font-size: 11px;
+    cursor: pointer;
+    margin-top: 6px;
+    width: 100%;
+    transition: 0.3s;
+    font-weight: 600;
+}
+
+.request-btn:hover {
+    background: #2C5F2D;
+    color: white;
+}
+
+.request-btn.requested {
+    background: #fff3cd;
+    border-color: #f0a500;
+    color: #856404;
+    cursor: default;
+}

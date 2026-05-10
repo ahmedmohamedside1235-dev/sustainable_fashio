@@ -1,0 +1,96 @@
+body {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-image: url('/assets/forget_password/images/forget.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100vh;
+}
+
+.forgot-card {
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    border: none;
+}
+
+.card-header {
+    background: #353648;
+    color: white;
+    text-align: center;
+    padding: 25px;
+    border: none;
+}
+
+.card-header i {
+    font-size: 50px;
+    margin-bottom: 10px;
+}
+
+.card-header h3 {
+    margin: 0;
+    font-weight: 600;
+}
+
+.card-header p {
+    margin: 10px 0 0;
+    opacity: 0.9;
+}
+
+.card-body {
+    padding: 30px;
+}
+
+.btn-send {
+    background: #464970;
+    color: white;
+    width: 100%;
+    padding: 12px;
+    font-weight: bold;
+    font-size: 16px;
+    border-radius: 10px;
+    transition: all 0.3s;
+}
+
+.btn-send:hover {
+    background: #363a6c;
+    color: white;
+    transform: translateY(-2px);
+}
+
+.btn-back {
+    background: #6c757d;
+    color: white;
+    width: 100%;
+    padding: 12px;
+    font-weight: bold;
+    border-radius: 10px;
+    transition: all 0.3s;
+}
+
+.btn-back:hover {
+    background: #5a6268;
+    color: white;
+}
+
+.form-control {
+    border-radius: 10px;
+    padding: 12px;
+    border: 1px solid #e0e0e0;
+}
+
+.form-control:focus {
+    border-color: #4e54c8;
+    box-shadow: 0 0 0 0.2rem rgba(78, 84, 200, 0.25);
+}
+
+.alert {
+    border-radius: 10px;
+}
+
+.mainColor {
+    color: #464970;
+}

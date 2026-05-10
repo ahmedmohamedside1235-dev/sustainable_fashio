@@ -1,0 +1,331 @@
+body {
+    background: #eef4ee;
+    font-family: 'Segoe UI', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.navbar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.85) !important;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+    transition: 0.3s;
+}
+
+.navbar-nav li {
+    margin-right: 5px;
+}
+
+.navbar-nav .nav-link {
+    position: relative;
+    color: #333;
+    font-weight: 500;
+    padding: 6px 14px !important;
+    border-radius: 8px;
+    transition: all 0.25s ease;
+}
+
+.navbar-nav .nav-link::after {
+    display: none;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #198754;
+    background: rgba(25, 135, 84, 0.08);
+    transform: translateY(-1px);
+}
+
+.navbar-nav .nav-link.active {
+    color: #198754;
+    font-weight: 600;
+    background: rgba(25, 135, 84, 0.1);
+}
+
+.brand-icon {
+    width: 32px;
+    height: 32px;
+    background: #198754;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 16px;
+}
+
+.dropdown-menu {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    padding: 8px;
+    min-width: 160px;
+}
+
+.dropdown-item {
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 14px;
+    color: #333;
+    transition: 0.2s;
+}
+
+.dropdown-item:hover {
+    background: rgba(25, 135, 84, 0.1);
+    color: #198754;
+}
+
+.dropdown-item:last-child {
+    color: #dc3545;
+}
+
+.dropdown-item.logout:last-child:hover {
+    background: rgba(220, 53, 69, 0.08);
+    color: #dc3545;
+}
+
+.page-wrapper {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+}
+
+.card-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1.6fr;
+    max-width: 880px;
+    width: 100%;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+}
+
+/* LEFT PANEL */
+.left-panel {
+    background: #198754;
+    padding: 2.5rem 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.left-tag {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    margin-bottom: 1rem;
+    letter-spacing: .5px;
+}
+
+.left-title {
+    color: #fff;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1.4;
+    margin-bottom: .6rem;
+}
+
+.left-sub {
+    color: rgba(255, 255, 255, 0.65);
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.upload-zone {
+    margin-top: 1.5rem;
+    border: 2px dashed rgba(255, 255, 255, 0.35);
+    border-radius: 14px;
+    padding: 1.5rem 1rem;
+    text-align: center;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.upload-zone:hover {
+    border-color: rgba(255, 255, 255, 0.7);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.upload-icon {
+    width: 48px;
+    height: 48px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 10px;
+    font-size: 22px;
+    color: #fff;
+}
+
+.upload-txt {
+    color: #fff;
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 3px;
+}
+
+.upload-sub {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 11px;
+}
+
+#previewImg {
+    width: 100%;
+    height: 130px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-top: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    display: none;
+}
+
+.img-placeholder {
+    width: 100%;
+    height: 130px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1rem;
+    color: rgba(255, 255, 255, 0.2);
+    font-size: 36px;
+}
+
+.tips {
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-top: 1.5rem;
+}
+
+.tip-title {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 11px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    letter-spacing: .4px;
+}
+
+.tip-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: rgba(255, 255, 255, 0.65);
+    font-size: 12px;
+    margin-bottom: 5px;
+}
+
+.tip-dot {
+    width: 5px;
+    height: 5px;
+    background: #a7f3d0;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+/* RIGHT PANEL */
+.right-panel {
+    background: #fff;
+    padding: 2rem 2.2rem;
+}
+
+.form-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin-bottom: .2rem;
+}
+
+.form-sub {
+    font-size: 12px;
+    color: #888;
+    margin-bottom: 1.5rem;
+}
+
+.field-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #666;
+    letter-spacing: .3px;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.form-control,
+.form-select {
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 9px 12px;
+    font-size: 13px;
+    background: #fafafa;
+    transition: .2s;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #198754;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(25, 135, 84, 0.08);
+}
+
+.btn-submit {
+    width: 100%;
+    background: #198754;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 11px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: .2s;
+    margin-top: 1rem;
+}
+
+.btn-submit:hover {
+    background: #145c37;
+}
+
+@media (max-width: 640px) {
+    .card-wrapper {
+        grid-template-columns: 1fr;
+    }
+
+    .left-panel {
+        padding: 1.5rem;
+    }
+}
+
+.message {
+    position: fixed;
+    top: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 15px 30px;
+    border-radius: 10px;
+    color: white;
+    font-weight: bold;
+    transition: 0.5s;
+    z-index: 9999;
+}
+
+.message.success {
+    background: #198754;
+    color: #fff;
+}
+
+.message.show {
+    top: 40px;
+}

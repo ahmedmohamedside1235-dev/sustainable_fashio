@@ -1,0 +1,113 @@
+------------------------- Roles -------------------------
+    * Admin
+    * Seller
+    * buyer
+
+------------------------- Pages -------------------------
+
+
+    # Create Database                                   Done
+    # Create Models                                     Done
+    # Multiply Authentication                           Done
+    # Create Controllers                                Done
+    # Run CLI : php artisan storage:link
+    # Handel SESSION_LIFETIME = 20000                   Done
+    # Change time-zone of project to "Africa/Cairo"     Done
+
+------------------------- Database -------------------------
+
+    @ Users
+        => user_id
+        => full_name [string]
+        => email [string, unique]
+        => password [string]
+        => phone [string]
+        => type Enum["admin", "seller", "buyer"]
+
+    @ Materials
+        => material_id
+        => material_name [string]
+        => category [string]
+
+    @ Item_Conditions
+        => condition_id
+        => condition_name [string]
+
+    @ Items
+        => item_id
+        => seller_id [FK -> Users.user_id]
+        => material_id [FK -> Materials.material_id]
+        => condition_id [FK -> Item_Conditions.condition_id]
+        => name [string]
+        => price [double]
+        => image [string]
+
+    @ Transactions
+        => transaction_id
+        => buyer_id [FK -> Users.user_id]
+        => seller_id [FK -> Users.user_id]
+        => status Enum["pending", "completed", "cancelled"]
+
+    @ Transaction_Items
+        => transaction_item_id
+        => transaction_id [FK -> Transactions.transaction_id]
+        => item_id [FK -> Items.item_id]
+        => price_at_purchase [double]
+
+    @ Swap_Requests
+        => swap_id
+        => requester_id [FK -> Users.user_id]
+        => receiver_id [FK -> Users.user_id]
+        => requested_item_id [FK -> Items.item_id]
+        => cash_topup_amount [double]
+        => status Enum["pending", "accepted", "rejected"]
+
+    @ Swap_Offer_Items
+        => swap_offer_item_id
+        => swap_id [FK -> Swap_Requests.swap_id]
+        => item_id [FK -> Items.item_id]
+        => offered_by_user_id [FK -> Users.user_id]
+
+    @ Notifications
+        => notification_id
+        => user_id [FK -> Users.user_id]
+        => title [string]
+        => message [text]
+        => type [string]
+        => is_read [boolean : false]
+
+    @ Sustainability_Reports
+        => report_id
+        => transaction_id [FK -> Transactions.transaction_id]
+    
+------------------------- Permissions -------------------------
+
+    @ Admin
+        * Login                             Done
+        * Manage Users                      
+        * View All Transactions             
+        * View Sustainability Reports       
+        * View All Items                    
+        * Monitor Platform Activity
+
+    @ Seller
+        * Register & Login                  Done
+        * Manage Profile                    
+        * Add New Items                     Done
+        * Edit Own Items                    
+        * Delete Own Items                  
+        * View Own Transactions             Done
+        * Accept / Reject Swap Requests     Done
+        * Offer Items For Swap              Done
+        * Update Item Status                Done
+
+    @ Buyer
+        * Register & Login                  Done
+        * Manage Profile
+        * Browse Items                      Done
+        * Search & Filter Items             Done
+        * Buy Items                         Done
+        * Create Transactions               Done
+        * Send Swap Requests                Done
+        * Offer Swap Items                  Done
+        * View Transaction History          Done

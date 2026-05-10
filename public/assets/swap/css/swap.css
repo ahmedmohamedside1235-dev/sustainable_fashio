@@ -1,0 +1,551 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #f6f8f6;
+}
+
+/* ── Navbar ── */
+.navbar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.85) !important;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+    transition: 0.3s;
+    padding-block: 15px;
+}
+
+.navbar-nav li {
+    margin-right: 5px;
+}
+
+.brand-icon {
+    width: 32px;
+    height: 32px;
+    background: #198754;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 16px;
+}
+
+.navbar-nav .nav-link {
+    position: relative;
+    color: #333;
+    font-weight: 500;
+    padding: 6px 14px !important;
+    border-radius: 8px;
+    transition: all 0.25s ease;
+}
+
+.navbar-nav .nav-link::after {
+    display: none;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #198754;
+    background: rgba(25, 135, 84, 0.08);
+    transform: translateY(-1px);
+}
+
+.navbar-nav .nav-link.active {
+    color: #198754;
+    font-weight: 600;
+    background: rgba(25, 135, 84, 0.1);
+}
+
+.dropdown-menu {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    padding: 8px;
+    min-width: 160px;
+}
+
+.dropdown-item {
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 14px;
+    color: #333;
+    transition: 0.2s;
+}
+
+.dropdown-item:hover {
+    background: rgba(25, 135, 84, 0.1);
+    color: #198754;
+}
+
+.dropdown-item:last-child {
+    color: #dc3545;
+}
+
+.dropdown-item.logout:last-child:hover {
+    background: rgba(220, 53, 69, 0.08);
+    color: #dc3545;
+}
+
+/* ── Banner ── */
+.page-banner {
+    background: linear-gradient(135deg, #2C5F2D 0%, #70a90d 100%);
+    color: white;
+    text-align: center;
+    padding: 44px 20px 36px;
+}
+
+.page-banner h1 {
+    font-size: 30px;
+    font-weight: 800;
+    margin-bottom: 8px;
+}
+
+.page-banner p {
+    font-size: 14px;
+    opacity: 0.9;
+    margin: 0;
+}
+
+/* ── Tabs ── */
+.tabs-bar {
+    display: flex;
+    background: white;
+    border-bottom: 2px solid #e8f5e9;
+    padding: 0 24px;
+    position: sticky;
+    top: 62px;
+    z-index: 900;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
+}
+
+.tab-btn {
+    padding: 14px 28px;
+    border: none;
+    background: transparent;
+    font-size: 14px;
+    font-weight: 600;
+    color: #888;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: 0.3s;
+    margin-bottom: -2px;
+}
+
+.tab-btn:hover {
+    color: #2C5F2D;
+}
+
+.tab-btn.active {
+    color: #2C5F2D;
+    border-bottom-color: #2C5F2D;
+}
+
+.tab-panel {
+    display: none;
+}
+
+.tab-panel.active {
+    display: block;
+}
+
+/* ── Stats ── */
+.stats-bar {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    max-width: 1000px;
+    margin: 26px auto 0;
+    padding: 0 20px;
+}
+
+.stat-box {
+    flex: 1;
+    min-width: 120px;
+    background: white;
+    border-radius: 14px;
+    padding: 14px 18px;
+    text-align: center;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+    border-top: 4px solid #2C5F2D;
+}
+
+.stat-box.pending {
+    border-top-color: #f0a500;
+}
+
+.stat-box.accepted {
+    border-top-color: #198754;
+}
+
+.stat-box.rejected {
+    border-top-color: #e74c3c;
+}
+
+.stat-box h2 {
+    font-size: 28px;
+    font-weight: 800;
+    margin: 0;
+    color: #2C5F2D;
+}
+
+.stat-box.pending h2 {
+    color: #f0a500;
+}
+
+.stat-box.accepted h2 {
+    color: #198754;
+}
+
+.stat-box.rejected h2 {
+    color: #e74c3c;
+}
+
+.stat-box p {
+    margin: 4px 0 0;
+    font-size: 12px;
+    color: #888;
+}
+
+/* ── DB note ── */
+.db-note {
+    max-width: 1000px;
+    margin: 18px auto 0;
+    padding: 0 20px;
+}
+
+.db-note-inner {
+    background: #fff8e1;
+    border-left: 4px solid #f0a500;
+    padding: 11px 15px;
+    border-radius: 0 10px 10px 0;
+    font-size: 12px;
+    color: #5d4037;
+}
+
+.db-note-inner strong {
+    color: #e65100;
+}
+
+code {
+    background: #f5f5f5;
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-size: 11px;
+}
+
+/* ── Filter ── */
+.filter-bar {
+    max-width: 1000px;
+    margin: 16px auto 0;
+    padding: 0 20px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.filter-bar select,
+.filter-bar input {
+    padding: 8px 13px;
+    border: 1.5px solid #ddd;
+    border-radius: 8px;
+    font-size: 13px;
+    background: white;
+    outline: none;
+    transition: 0.3s;
+}
+
+.filter-bar select:focus,
+.filter-bar input:focus {
+    border-color: #2C5F2D;
+}
+
+/* ── Grid ── */
+.swap-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 18px;
+    max-width: 1000px;
+    margin: 20px auto 60px;
+    padding: 0 20px;
+}
+
+/* ── Swap Card ── */
+.swap-card {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.07);
+    border: 1px solid #f0f0f0;
+    transition: 0.3s;
+    position: relative;
+}
+
+.swap-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.1);
+}
+
+/* item image strip */
+.swap-card-img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+}
+
+/* status badge */
+.status-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.status-badge.pending {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.status-badge.accepted {
+    background: #d4edda;
+    color: #155724;
+}
+
+.status-badge.rejected {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.status-badge.completed {
+    background: #cce5ff;
+    color: #004085;
+}
+
+/* swap id */
+.swap-id-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 10px;
+    backdrop-filter: blur(4px);
+}
+
+.swap-body {
+    padding: 14px 16px;
+}
+
+.swap-body h3 {
+    font-size: 15px;
+    font-weight: 700;
+    margin: 0 0 8px;
+    text-transform: capitalize;
+}
+
+/* info rows */
+.swap-info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+    font-size: 13px;
+}
+
+.swap-info-row .label {
+    color: #888;
+}
+
+.swap-info-row .value {
+    font-weight: 700;
+    color: #333;
+}
+
+.swap-info-row .value.green {
+    color: #2C5F2D;
+}
+
+.swap-info-row .value.red {
+    color: #e74c3c;
+}
+
+/* offer box */
+.offer-box {
+    background: #f0faf0;
+    border-radius: 10px;
+    padding: 10px 12px;
+    margin: 10px 0;
+    font-size: 13px;
+    color: #444;
+    border-left: 3px solid #2C5F2D;
+}
+
+.offer-box .offer-label {
+    font-size: 11px;
+    color: #2C5F2D;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+/* divider */
+.swap-divider {
+    border: none;
+    border-top: 1px solid #f0f0f0;
+    margin: 10px 0;
+}
+
+/* buyer info (seller view) */
+.buyer-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    background: #f8f8f8;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.buyer-avatar {
+    width: 38px;
+    height: 38px;
+    background: #2C5F2D;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 16px;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.buyer-info .buyer-name {
+    font-weight: 700;
+    font-size: 14px;
+    color: #333;
+}
+
+.buyer-info .buyer-sub {
+    font-size: 12px;
+    color: #888;
+}
+
+/* action buttons */
+.action-btns {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.btn-accept {
+    flex: 1;
+    padding: 8px;
+    background: #198754;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-accept:hover {
+    background: #145c37;
+}
+
+.btn-reject {
+    flex: 1;
+    padding: 8px;
+    background: transparent;
+    border: 1.5px solid #e74c3c;
+    color: #e74c3c;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-reject:hover {
+    background: #e74c3c;
+    color: white;
+}
+
+.btn-disabled {
+    flex: 1;
+    padding: 8px;
+    background: #f5f5f5;
+    color: #aaa;
+    border: none;
+    border-radius: 8px;
+    font-size: 12px;
+    cursor: default;
+    text-align: center;
+}
+
+.swap-date {
+    font-size: 11px;
+    color: #bbb;
+    margin-top: 6px;
+}
+
+/* empty */
+.empty-state {
+    text-align: center;
+    padding: 70px 20px;
+    color: #aaa;
+    grid-column: 1/-1;
+}
+
+.empty-state i {
+    font-size: 52px;
+    margin-bottom: 14px;
+    color: #c8e6c9;
+}
+
+.empty-state h3 {
+    color: #888;
+}
+
+/* toast */
+#toast {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #2C5F2D;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 10px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: 0.4s;
+    z-index: 9999;
+    font-size: 14px;
+    pointer-events: none;
+}
+
+#toast.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@media(max-width:600px) {
+    .page-banner h1 {
+        font-size: 22px;
+    }
+
+    .tabs-bar {
+        padding: 0 10px;
+    }
+
+    .tab-btn {
+        padding: 11px 14px;
+        font-size: 13px;
+    }
+}
