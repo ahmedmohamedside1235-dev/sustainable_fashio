@@ -26,7 +26,8 @@ loadItems(function () {
         <div class="card" data-aos="fade-up" data-aos-delay="100">
             <img src="${sliceItem.image}" class="card-img" style="cursor:pointer;" onerror="this.src=\'/assets/shared/images/default.png\'">
             <div class="card-body">
-                <h3>${sliceItem.category}</h3>
+                <h3>${sliceItem.owner_name}</h3>
+                <p>Category:${sliceItem.category}</p>
                 <p>Condition: ${sliceItem.condition}</p>
                 <p>Material: ${sliceItem.material}</p>
                 <p>Price:${sliceItem.price}</p>

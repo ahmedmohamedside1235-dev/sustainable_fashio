@@ -50,16 +50,16 @@ Route::middleware('nocache')->group(function () {
 
         // Collections
         Route::get('/items/all', [CollectionsController::class, 'getItems']);
+        Route::post('/items/{id}/update', [CollectionsController::class, 'updateItem'])->name('items.update');
+        Route::post('/items/{id}/delete', [CollectionsController::class, 'deleteMyItem'])->name('items.delete');
         Route::get('/items/my-actions', [CollectionsController::class, 'getMyActions']);
-        Route::post('/swap/store', [CollectionsController::class, 'storeSwap']);
         Route::post('/request/store', [CollectionsController::class, 'storeRequest']);
-
-        // Requests page
         Route::get('/requests/all', [CollectionsController::class, 'getRequests']);
         Route::patch('/requests/{id}/update', [CollectionsController::class, 'updateRequest']);
         Route::patch('/requests/{id}/cancel', [CollectionsController::class, 'cancelRequest']);
-        Route::patch('/swap/{id}/update', [CollectionsController::class, 'updateSwap']);
+        Route::post('/swap/store', [CollectionsController::class, 'storeSwap']);
         Route::get('/swaps/all', [CollectionsController::class, 'getSwaps']);
+        Route::patch('/swap/{id}/update', [CollectionsController::class, 'updateSwap']);
         Route::post('/swap/{id}/cancel', [CollectionsController::class, 'cancelSwap']);
         
         // Admin

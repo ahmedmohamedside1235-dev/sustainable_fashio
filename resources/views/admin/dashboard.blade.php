@@ -302,10 +302,10 @@
                                 <td style="color:#aaa;font-size:12px;">{{ $user->created_at->format('d M Y') }}</td>
                                 <td>
                                     @if ($user->user_id === Auth::guard('user')->id())
-                                        <button disabled class="btn-edit">
+                                        <button  hidden class="btn-edit">
                                             <i class="fas fa-edit"></i>
                                         </button>
-                                        <button disabled class="btn-delete">
+                                        <button  hidden class="btn-delete">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     @else
@@ -540,13 +540,22 @@
     <div class="modal-overlay" id="editModal">
         <div class="modal-box">
             <h3><i class="fas fa-edit me-2" style="color:#198754;"></i>Edit User</h3>
-            <input type="hidden" id="editUserId">
+            <input type="hidden" id="editUserId" name="">
             <label>Name</label>
-            <input type="text" id="editName" placeholder="Name">
+            <input type="text" id="editName" placeholder="Name" name="name" value="{{old('name')}}">
+            @error('name')
+                <p class="alert alert-danger fs-6 mt-3">{{ $message }}</p>                
+            @enderror
             <label>Email</label>
-            <input type="email" id="editEmail" placeholder="Email">
+            <input type="email" id="editEmail" placeholder="Email" name="email" value="{{old('email')}}">
+            @error('email')
+                <p class="alert alert-danger fs-6 mt-3">{{ $message }}</p>                
+            @enderror
             <label>Phone</label>
-            <input type="text" id="editPhone" placeholder="Phone">
+            <input type="text" id="editPhone" placeholder="Phone" name="phone" value="{{old('phone')}}">
+            @error('phone')
+                <p class="alert alert-danger fs-6 mt-3">{{ $message }}</p>                
+            @enderror
             <label>Role</label>
             <select id="editRole">
                 <option value="buyer">Buyer</option>

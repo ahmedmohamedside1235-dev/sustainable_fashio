@@ -86,9 +86,11 @@
     </nav>
     <!-- Title -->
     <div class="container my-5 d-flex align-items-center justify-content-evenly">
-        <h1 class="page-title mt-5">Browsed Recycled Clothes</h1>
+        <h1 class="page-title mt-5 mb-0">Browsed Recycled Clothes</h1>
         <div class="mb-0 mt-5">
-            <a href="{{ route('add_item') }}" class="add-btn">Add New Item</a>
+            @if (Auth::guard('user')->check() && Auth::guard('user')->user()->role == 'seller')
+                <a href="{{ route('add_item') }}" class="add-btn">Add New Item</a>
+            @endif
             <input type="text" id="searchInput" placeholder="Search clothes.." onkeyup="searchItems()">
         </div>
     </div>
@@ -96,7 +98,53 @@
     <!-- Cards Container -->
     <div class="cards-container" id="cardsContainer"></div>
     <div id="toast"></div>
-    <div class="cards-container" id="cardsContainer"></div>
+
+    <div id="editItemModal" class="modal">
+        <div class="modal-content" style="max-width:400px;">
+            <span onclick="closeEditItem()"
+                style="position:absolute;top:10px;right:14px;font-size:18px;cursor:pointer;color:#888;">&times;</span>
+            <h2 style="font-size:17px;margin-bottom:16px;">Edit Item</h2>
+
+            <input type="hidden" id="editItemId">
+
+            <div style="margin-bottom:12px;">
+                <label style="font-size:12px;color:#666;display:block;margin-bottom:4px;">Price (EGP)</label>
+                <input type="number" id="editPrice" min="1" step="0.01"
+                    style="width:100%;padding:9px 12px;border:1px solid #ddd;border-radius:9px;font-size:13px;outline:none;">
+            </div>
+
+            <div style="margin-bottom:12px;">
+                <label style="font-size:12px;color:#666;display:block;margin-bottom:4px;">Condition</label>
+                <select id="editCondition"
+                    style="width:100%;padding:9px 12px;border:1px solid #ddd;border-radius:9px;font-size:13px;outline:none;">
+                    @foreach (\App\Models\Item_condition::all() as $c)
+                        <option value="{{ $c->condition_id }}">{{ $c->condition_name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div style="margin-bottom:12px;">
+                <label style="font-size:12px;color:#666;display:block;margin-bottom:4px;">Material</label>
+                <select id="editMaterial"
+                    style="width:100%;padding:9px 12px;border:1px solid #ddd;border-radius:9px;font-size:13px;outline:none;">
+                    @foreach (\App\Models\Material::all() as $m)
+                        <option value="{{ $m->material_id }}">{{ $m->material_name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div style="margin-bottom:16px;">
+                <label style="font-size:12px;color:#666;display:block;margin-bottom:4px;">Image (optional)</label>
+                <input type="file" id="editImage" accept="image/*"
+                    style="width:100%;padding:7px 12px;border:1px solid #ddd;border-radius:9px;font-size:13px;">
+            </div>
+
+            <button onclick="saveEditItem()"
+                style="width:100%;padding:10px;background:#198754;color:#fff;border:none;border-radius:9px;font-size:14px;font-weight:600;cursor:pointer;">
+                Save Changes
+            </button>
+        </div>
+    </div>
     <div id="swapModal" class="modal">
         <div class="modal-content">
             <span id="closeModal">&times;</span>
@@ -116,6 +164,7 @@
         });
         const collectionsUrl = "{{ route('collections') }}";
         let isLoggedIn = {{ Auth::guard('user')->check() ? 'true' : 'false' }};
+        const addItemUrl       = "{{ route('add_item') }}";
     </script>
     <script src="{{ asset('assets/shared/js/jquery.js') }}"></script>
     <script src="{{ asset('assets/shared/js/script.js') }}"></script>

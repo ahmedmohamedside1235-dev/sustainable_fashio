@@ -152,8 +152,20 @@ class AdminController extends Controller
         if ($redirect) {
             return $redirect;
         }
+
+        // get all swap and delete it
+        Swap::where('requested_item_id', $id)->delete();
+
+        // get transaction id for item and delete it
+        $txIds = Transaction_items::where('item_id', $id)->pluck('transaction_id');
+        Transaction_items::where('item_id', $id)->delete();
+        Transaction::whereIn('transaction_id', $txIds)->delete();
+
+        // delete item
         Item::findOrFail($id)->delete();
+
         return response()->json(['message' => 'Deleted!']);
+
     }
 
     // =====================

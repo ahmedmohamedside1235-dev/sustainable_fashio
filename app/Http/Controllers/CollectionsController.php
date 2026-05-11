@@ -12,17 +12,13 @@ class CollectionsController extends Controller
 {
     public function index()
     {
-        if (!Auth::guard('user')->check()) {
+        if (! Auth::guard('user')->check()) {
             return redirect()->route('login')->with('errorLogin', 'You must login first');
         }
         return view('users.collections');
     }
 
-    public function indexRequest()
-    {
-        return view('users.request');
-    }
-
+    // ==================== get all items =====================
     public function getItems()
     {
         $myId   = Auth::guard('user')->id();
@@ -42,15 +38,17 @@ class CollectionsController extends Controller
 
         foreach ($items as $item) {
             $result[] = [
-                'item_id'    => $item->item_id,
-                'price'      => $item->price,
-                'image'      => asset('storage/uploaded/' . $item->image),
-                'condition'  => $item->condition->condition_name,
-                'material'   => $item->material->material_name,
-                'category'   => $item->material->category,
-                'owner_name' => $item->seller->name,
-                'owner_id'   => $item->seller_id,
-                'is_mine'    => $item->seller_id === $myId,
+                'item_id'      => $item->item_id,
+                'price'        => $item->price,
+                'image'        => asset('storage/uploaded/' . $item->image),
+                'condition'    => $item->condition->condition_name,
+                'condition_id' => $item->condition_id,
+                'material'     => $item->material->material_name,
+                'material_id'  => $item->material_id,
+                'category'     => $item->material->category,
+                'owner_name'   => $item->seller->name,
+                'owner_id'     => $item->seller_id,
+                'is_mine'      => $item->seller_id === $myId,
             ];
         }
 
@@ -60,6 +58,26 @@ class CollectionsController extends Controller
         ]);
     }
 
+    // ===================== delete my item =====================
+    public function deleteMyItem($id)
+    {
+        $myId = Auth::guard('user')->id();
+        $item = Item::where('item_id', $id)
+            ->where('seller_id', $myId)
+            ->first();
+        if (! $item) {
+            return response()->json(['message' => 'Not found'], 404);
+        }
+        // delete all swap and transaction related to this item
+        Swap::where('requested_item_id', $id)->delete();
+        $txIds = Transaction_items::where('item_id', $id)->pluck('transaction_id');
+        Transaction_items::where('item_id', $id)->delete();
+        Transaction::whereIn('transaction_id', $txIds)->delete();
+        $item->delete();
+        return response()->json(['message' => 'Deleted!']);
+    }
+
+    // ===================== get all swaped item and requested item =====================
     public function getMyActions()
     {
         $myId           = Auth::guard('user')->id();
@@ -86,6 +104,7 @@ class CollectionsController extends Controller
         ]);
     }
 
+    // ===================== get requests =====================
     public function getRequests()
     {
         $myId   = Auth::guard('user')->id();
@@ -136,6 +155,7 @@ class CollectionsController extends Controller
         ]);
     }
 
+    // ===================== update request =====================
     public function updateRequest(Request $request, $id)
     {
         $request->validate([
@@ -157,6 +177,7 @@ class CollectionsController extends Controller
         return response()->json(['message' => 'Done!', 'status' => $transaction->status]);
     }
 
+    // ==================== cancel request =====================
     public function cancelRequest($id)
     {
         $myId = Auth::guard('user')->id();
@@ -176,6 +197,7 @@ class CollectionsController extends Controller
         return response()->json(['message' => 'Cancelled!']);
     }
 
+    // ===================== store request =====================
     public function storeRequest(Request $request)
     {
         $request->validate([
@@ -198,6 +220,8 @@ class CollectionsController extends Controller
 
         return response()->json(['message' => 'Request sent!']);
     }
+
+    // ===================== store swap =====================
     public function storeSwap(Request $request)
     {
         $request->validate([
@@ -218,6 +242,7 @@ class CollectionsController extends Controller
         return response()->json(['message' => 'Swap request sent!']);
     }
 
+    // ===================== update swap =====================
     public function updateSwap(Request $request, $id)
     {
         $request->validate([
@@ -235,7 +260,7 @@ class CollectionsController extends Controller
         return response()->json(['message' => 'Done!', 'status' => $swap->status]);
     }
 
-    // في CollectionsController
+    // ===================== get swaps =====================
     public function getSwaps()
     {
         $myId   = Auth::guard('user')->id();
@@ -263,7 +288,7 @@ class CollectionsController extends Controller
                     'image'     => asset('storage/uploaded/' . $item->image),
                     'condition' => $item->condition->condition_name,
                     'material'  => $item->material->material_name,
-                    'category' => $item->material->category,
+                    'category'  => $item->material->category,
                 ] : null,
             ];
         }
@@ -271,6 +296,7 @@ class CollectionsController extends Controller
         return response()->json(['role' => $myRole, 'swaps' => $result]);
     }
 
+    //====================== cancel swap =====================
     public function cancelSwap($id)
     {
         $myId = Auth::guard('user')->id();
@@ -282,5 +308,43 @@ class CollectionsController extends Controller
         $swap->status = 'rejected';
         $swap->save();
         return response()->json(['message' => 'Cancelled!']);
+    }
+
+    // ===================== update item =====================
+    public function updateItem(Request $request, $id)
+    {
+        $request->validate([
+            'price'        => ['required', 'numeric', 'regex:/^\d+(\.\d{1,2})?$/', 'min:1'],
+            'condition_id' => ['required', 'exists:item_conditions,condition_id'],
+            'material_id'  => ['required', 'exists:materials,material_id'],
+            'image'        => ['nullable', 'image', 'max:5120'],
+        ]);
+
+        $myId = Auth::guard('user')->id();
+
+        // check if item belongs to user
+        $item = Item::where('item_id', $id)
+            ->where('seller_id', $myId)
+            ->first();
+
+        if (! $item) {
+            return response()->json(['message' => 'Not found'], 404);
+        }
+
+        $item->price        = $request->price;
+        $item->condition_id = $request->condition_id;
+        $item->material_id  = $request->material_id;
+
+        // edit image if new image uploaded
+        if ($request->hasFile('image')) {
+            $file     = $request->file('image');
+            $fileName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)
+            . '_' . time() . '.' . $file->getClientOriginalExtension();
+            $file->storeAs('uploaded', $fileName, 'public');
+            $item->image = $fileName;
+        }
+
+        $item->save();
+        return response()->json(['message' => 'Item updated!']);
     }
 }

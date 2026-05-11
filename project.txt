@@ -84,17 +84,17 @@
 
     @ Admin
         * Login                             Done
-        * Manage Users                      
-        * View All Transactions             
-        * View Sustainability Reports       
-        * View All Items                    
-        * Monitor Platform Activity
+        * Manage Users                      Done
+        * View All Transactions             Done
+        * View Sustainability Reports       Done
+        * View All Items                    Done
+        * Monitor Platform Activity         
 
     @ Seller
         * Register & Login                  Done
         * Manage Profile                    
         * Add New Items                     Done
-        * Edit Own Items                    
+        * Edit Own Items                    Done
         * Delete Own Items                  
         * View Own Transactions             Done
         * Accept / Reject Swap Requests     Done

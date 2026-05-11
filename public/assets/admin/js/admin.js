@@ -44,16 +44,20 @@ function filterTx() {
 // ── Delete Item ──
 function deleteItem(id, btn) {
     if (!confirm('Delete this item?')) return;
-    console.log(id, csrfToken);
     $.ajax({
         url: `/admin/items/${id}/delete`,
         method: 'POST',
-        headers: { 'X-CSRF-TOKEN': csrfToken, 'X-HTTP-Method-Override': 'POST' },
+        headers: { 'X-CSRF-TOKEN': csrfToken},
         success: function (data) {
             btn.closest('tr').remove();
             showToast('✅ Item deleted');
+            setTimeout(() => {
+                location.reload();
+            }, 300);
         },
-        error: function () { showToast('❌ Failed', '#dc3545'); }
+        error: function (error) {
+            console.log(error);
+            showToast('❌ Failed', '#dc3545'); }
     });
 }
 
@@ -105,12 +109,17 @@ function saveUser() {
             phone: document.getElementById('editPhone').value,
             role: document.getElementById('editRole').value,
         },
-        success: function () {
+        success: function (data) {
             closeEditModal();
             showToast('✅ User updated');
             setTimeout(function () { location.reload(); }, 1000);
         },
-        error: function () { showToast('❌ Failed', '#dc3545'); }
+        error: function (error) {
+            showToast('❌ Failed', '#dc3545');
+            setTimeout(() => {
+                showToast('❌ The email has already been taken', '#dc3545');
+            }, 700);
+        }
     });
 }
 

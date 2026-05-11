@@ -170,12 +170,13 @@ function handleCancel(swapId, btn) {
     $.ajax({
         url: '/swap/' + swapId + '/cancel',
         method: 'POST',
-        headers: { 'X-CSRF-TOKEN': csrfToken, 'X-HTTP-Method-Override': 'PATCH' },
+        headers: { 'X-CSRF-TOKEN': csrfToken},
         success: function () {
             updateCardStatus(swapId, 'rejected');
             showToast('Swap cancelled', '#f0a500');
         },
-        error: function () { showToast('❌ Failed', '#dc3545'); }
+        error: function (error) {
+            showToast('❌ Failed', '#dc3545'); }
     });
 }
 
