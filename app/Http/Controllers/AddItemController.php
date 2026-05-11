@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 
 class AddItemController extends Controller
 {
+    // Show the form to add a new item and check if the user is a seller
     public function add_item()
     {
         if (!Auth::guard('user')->check() || Auth::guard('user')->user()->role != 'seller') {
@@ -17,8 +18,10 @@ class AddItemController extends Controller
         return view('users.addItem');
     }
 
+    // Handle the form submission to add a new item
     public function add_item_store(Request $request)
     {
+        // validate the incoming request data
         $request->validate([
             "price"    => ['required', 'regex:/^\d+(\.\d{1,2})?$/', 'gt:0'],
             "status"   => ['required', 'in:new,good,fair'],
@@ -50,9 +53,9 @@ class AddItemController extends Controller
         return redirect()->back()->with('success', 'New item has been added successfully');
     }
 
+    // Handle the image upload and return the file name to be stored in the database
     private function upload_image(Request $request, $name)
     {
-
         $file             = $request->file('image');
         $fileName         = $file->getClientOriginalName();
         $fileExtension    = $file->getClientOriginalExtension();

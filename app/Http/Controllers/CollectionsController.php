@@ -36,6 +36,7 @@ class CollectionsController extends Controller
 
         $result = [];
 
+        // format the items data to be sent to frontend
         foreach ($items as $item) {
             $result[] = [
                 'item_id'      => $item->item_id,
@@ -52,6 +53,7 @@ class CollectionsController extends Controller
             ];
         }
 
+        // send the items data along with the user's role to frontend
         return response()->json([
             'role'  => $myRole,
             'items' => $result,
@@ -65,9 +67,11 @@ class CollectionsController extends Controller
         $item = Item::where('item_id', $id)
             ->where('seller_id', $myId)
             ->first();
+
         if (! $item) {
             return response()->json(['message' => 'Not found'], 404);
         }
+
         // delete all swap and transaction related to this item
         Swap::where('requested_item_id', $id)->delete();
         $txIds = Transaction_items::where('item_id', $id)->pluck('transaction_id');
@@ -110,6 +114,7 @@ class CollectionsController extends Controller
         $myId   = Auth::guard('user')->id();
         $myRole = Auth::guard('user')->user()->role;
 
+        // get transactions where user is seller or buyer based on his role
         if ($myRole === 'seller') {
             $transactions = Transaction::where('seller_id', $myId)
                 ->orderBy('created_at', 'desc')
@@ -122,6 +127,7 @@ class CollectionsController extends Controller
 
         $result = [];
 
+        // 
         foreach ($transactions as $t) {
             $txItem = Transaction_items::where('transaction_id', $t->transaction_id)->first();
             $item   = $txItem ? Item::with(['condition', 'material'])
@@ -133,6 +139,7 @@ class CollectionsController extends Controller
                 $otherUser = \App\Models\UserData::find($t->seller_id);
             }
 
+            // format the transactions data to be sent to frontend
             $result[] = [
                 'transaction_id' => $t->transaction_id,
                 'status'         => $t->status,
@@ -248,10 +255,13 @@ class CollectionsController extends Controller
         $request->validate([
             'status' => ['required', 'in:accepted,rejected'],
         ]);
+
         $myId = Auth::guard('user')->id();
+
         $swap = Swap::where('swap_id', $id)
             ->where('receiver_id', $myId)
             ->first();
+
         if (! $swap) {
             return response()->json(['message' => 'Not found'], 404);
         }
@@ -276,7 +286,6 @@ class CollectionsController extends Controller
         foreach ($swaps as $s) {
             $item      = Item::with(['condition', 'material'])->find($s->requested_item_id);
             $otherUser = \App\Models\UserData::find($myRole === 'seller' ? $s->requester_id : $s->receiver_id);
-
             $result[] = [
                 'swap_id'           => $s->swap_id,
                 'status'            => $s->status,

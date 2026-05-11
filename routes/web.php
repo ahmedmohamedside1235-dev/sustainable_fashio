@@ -34,9 +34,6 @@ Route::middleware('nocache')->group(function () {
         /* ======== Collections ======== */
         Route::get('/user/collections', [UserController::class, 'indexCollection'])->name('collections');
 
-        /* ======== Cart ======== */
-        Route::get('/user/cart', [UserController::class, 'indexCart'])->name('cart');
-
         /* ======== Request ======== */
         Route::get('/user/request', [UserController::class, 'indexRequest'])->name('request');
 

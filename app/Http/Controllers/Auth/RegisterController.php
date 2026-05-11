@@ -14,8 +14,10 @@ class RegisterController extends Controller
         return view('auth.register');
     }
 
+    // Handle the registration request
     public function register(Request $request)
     {
+        // validate the incoming request data
         $request->validate([
             "role"     => ['required', 'in:admin,seller,buyer'],
             "name"     => ['required', 'regex:/^[A-Za-z]+(\s[A-Za-z]+){0,2}$/'],
@@ -24,6 +26,7 @@ class RegisterController extends Controller
             "phone"    => ['required', 'regex:/^01(0|1|2|5)[0-9]{8}$/'],
         ]);
 
+        // check if the user is trying to create an admin account and if the current user is an admin
         if ($request->role == 'admin') {
             if (Auth::guard('user')->check() && Auth::guard('user')->user()->role == 'admin') {
                 $this->create_user($request);
@@ -37,6 +40,7 @@ class RegisterController extends Controller
         }
     }
 
+    // create a new user in the database
     private function create_user(Request $request)
     {
         $user           = new UserData();
