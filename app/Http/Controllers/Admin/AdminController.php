@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
 {
+    // Check if the logged-in user is an admin
     private function checkAdmin()
     {
         if (! Auth::guard('user')->check() || Auth::guard('user')->user()->role !== 'admin') {
@@ -23,16 +24,14 @@ class AdminController extends Controller
     }
 
     // =====================
-    //  dashboard
+    // Main dashboard
     // =====================
     public function dashboard()
     {
         $redirect = $this->checkAdmin();
-        if ($redirect) {
-            return $redirect;
-        }
+        if ($redirect) return $redirect;
 
-        // ── Overview Stats ──
+        // Overview counts
         $stats = [
             'total_users'          => UserData::count(),
             'total_items'          => Item::count(),
@@ -41,33 +40,26 @@ class AdminController extends Controller
             'pending_transactions' => Transaction::where('status', 'pending')->count(),
         ];
 
-        // ── Recent Transactions ──
+        // Last 5 transactions with buyer and seller names
         $recentTransactions = Transaction::with(['buyer', 'seller'])
             ->orderBy('created_at', 'desc')
             ->limit(5)
             ->get();
 
-        // ── Recent Swaps ──
+        // Last 5 swaps with requester and receiver names
         $recentSwaps = Swap::with(['requester', 'receiver'])
             ->orderBy('created_at', 'desc')
             ->limit(5)
             ->get();
 
-        // ── Items Tab ──
-        $items = Item::with(['seller', 'condition', 'material'])
-            ->orderBy('created_at', 'desc')
-            ->get();
-
-        $itemStats = [
-            'total' => Item::count(),
-        ];
-
+        // All items with related seller, condition, material
+        $items      = Item::with(['seller', 'condition', 'material'])->orderBy('created_at', 'desc')->get();
+        $itemStats  = ['total' => Item::count()];
         $conditions = Item_condition::all();
         $materials  = Material::all();
 
-        // ── Users Tab ──
-        $users = UserData::orderBy('created_at', 'desc')->get();
-
+        // All users ordered by newest
+        $users     = UserData::orderBy('created_at', 'desc')->get();
         $userStats = [
             'total'   => UserData::count(),
             'buyers'  => UserData::where('role', 'buyer')->count(),
@@ -75,7 +67,7 @@ class AdminController extends Controller
             'admins'  => UserData::where('role', 'admin')->count(),
         ];
 
-        // ── Transactions Tab ──
+        // All transactions with related buyer, seller, items
         $transactions = Transaction::with(['buyer', 'seller', 'items.item.material', 'items.item.condition'])
             ->orderBy('created_at', 'desc')
             ->get();
@@ -87,11 +79,12 @@ class AdminController extends Controller
             'rejected' => Transaction::where('status', 'rejected')->count(),
         ];
 
-        // ── Sustainability Tab ──
+        // Sustainability calculations
         $totalItems = Item::count() ?: 1;
         $totalTx    = Transaction::count() ?: 1;
         $totalSwap  = Swap::count() ?: 1;
 
+        // Count how many items each material has + calculate percentage
         $materialStats = Material::withCount('items')
             ->having('items_count', '>', 0)
             ->orderBy('items_count', 'desc')
@@ -102,6 +95,7 @@ class AdminController extends Controller
                 return $m;
             });
 
+        // Count items grouped by material category
         $categoryStats = Material::selectRaw('category, count(*) as count')
             ->join('items', 'materials.material_id', '=', 'items.material_id')
             ->groupBy('category')
@@ -124,13 +118,13 @@ class AdminController extends Controller
             'material_stats'     => $materialStats,
             'category_stats'     => $categoryStats,
             'tx_accepted_pct'    => round(($txStats['accepted'] / $totalTx) * 100),
-            'tx_pending_pct'     => round(($txStats['pending'] / $totalTx) * 100),
+            'tx_pending_pct'     => round(($txStats['pending']  / $totalTx) * 100),
             'tx_rejected_pct'    => round(($txStats['rejected'] / $totalTx) * 100),
             'swap_accepted'      => $swapAccepted,
             'swap_pending'       => $swapPending,
             'swap_rejected'      => $swapRejected,
             'swap_accepted_pct'  => round(($swapAccepted / $totalSwap) * 100),
-            'swap_pending_pct'   => round(($swapPending / $totalSwap) * 100),
+            'swap_pending_pct'   => round(($swapPending  / $totalSwap) * 100),
             'swap_rejected_pct'  => round(($swapRejected / $totalSwap) * 100),
         ];
 
@@ -144,39 +138,123 @@ class AdminController extends Controller
     }
 
     // =====================
-    // delete item
+    // Search users by name or email (server-side)
+    // =====================
+    public function searchUsers(Request $request)
+    {
+        $redirect = $this->checkAdmin();
+        if ($redirect) return $redirect;
+
+        $query = $request->input('query', '');
+        $role  = $request->input('role', '');
+
+        // Start building the query
+        $users = UserData::query();
+
+        // Filter by name or email if search term exists
+        if ($query) {
+            $users->where(function ($q) use ($query) {
+                $q->where('name',  'like', "%{$query}%")
+                ->orWhere('email', 'like', "%{$query}%");
+            });
+        }
+
+        // Filter by role if selected
+        if ($role) {
+            $users->where('role', $role);
+        }
+
+        $result = $users->orderBy('created_at', 'desc')->get();
+
+        // Return each user's data as JSON
+        return response()->json($result->map(function ($u) {
+            return [
+                'user_id'    => $u->user_id,
+                'name'       => $u->name,
+                'email'      => $u->email,
+                'phone'      => $u->phone,
+                'role'       => $u->role,
+                'created_at' => $u->created_at->format('d M Y'),
+            ];
+        }));
+    }
+
+    // =====================
+    // Export sustainability report as PDF
+    // =====================
+    public function exportPdf()
+    {
+        $redirect = $this->checkAdmin();
+        if ($redirect) return $redirect;
+
+        // Collect all data needed for the PDF
+        $totalItems = Item::count() ?: 1;
+        $totalTx    = Transaction::count() ?: 1;
+        $totalSwap  = Swap::count() ?: 1;
+
+        $swapAccepted = Swap::where('status', 'accepted')->count();
+        $swapPending  = Swap::where('status', 'pending')->count();
+        $swapRejected = Swap::where('status', 'rejected')->count();
+
+        $txAccepted = Transaction::where('status', 'accepted')->count();
+        $txPending  = Transaction::where('status', 'pending')->count();
+        $txRejected = Transaction::where('status', 'rejected')->count();
+
+        // Material usage stats
+        $materialStats = Material::withCount('items')
+            ->having('items_count', '>', 0)
+            ->orderBy('items_count', 'desc')
+            ->get();
+
+        // Category stats
+        $categoryStats = Material::selectRaw('category, count(*) as count')
+            ->join('items', 'materials.material_id', '=', 'items.material_id')
+            ->groupBy('category')
+            ->orderBy('count', 'desc')
+            ->get();
+
+        // Build the HTML content for the PDF manually (no external library needed)
+        $html = view('admin.pdf-report', compact(
+            'totalItems', 'swapAccepted', 'swapPending', 'swapRejected',
+            'txAccepted', 'txPending', 'txRejected',
+            'materialStats', 'categoryStats'
+        ))->render();
+
+        // Return HTML as downloadable file with .html extension
+        // (acts as a printable report the user can save as PDF from browser)
+        return response($html)
+            ->header('Content-Type', 'text/html')
+            ->header('Content-Disposition', 'attachment; filename="sustainability-report.html"');
+    }
+
+    // =====================
+    // Delete item and all related data
     // =====================
     public function deleteItem($id)
     {
         $redirect = $this->checkAdmin();
-        if ($redirect) {
-            return $redirect;
-        }
+        if ($redirect) return $redirect;
 
-        // get all swap and delete it
+        // Delete swaps linked to this item
         Swap::where('requested_item_id', $id)->delete();
 
-        // get transaction id for item and delete it
+        // Delete transaction items then their transactions
         $txIds = Transaction_items::where('item_id', $id)->pluck('transaction_id');
         Transaction_items::where('item_id', $id)->delete();
         Transaction::whereIn('transaction_id', $txIds)->delete();
 
-        // delete item
         Item::findOrFail($id)->delete();
 
         return response()->json(['message' => 'Deleted!']);
-
     }
 
     // =====================
-    // update user
+    // Update user info
     // =====================
     public function updateUser(Request $request, $id)
     {
         $redirect = $this->checkAdmin();
-        if ($redirect) {
-            return $redirect;
-        }
+        if ($redirect) return $redirect;
 
         $request->validate([
             'name'  => ['required', 'string', 'max:255'],
@@ -196,45 +274,37 @@ class AdminController extends Controller
     }
 
     // =====================
-    // delete user
+    // Delete user and all related data
     // =====================
     public function deleteUser($id)
     {
         $redirect = $this->checkAdmin();
-        if ($redirect) {
-            return $redirect;
-        }
+        if ($redirect) return $redirect;
 
-        // if user admin
+        // Prevent admin from deleting their own account
         if ($id == Auth::guard('user')->id()) {
             return response()->json(['message' => 'Cannot delete your own account'], 403);
         }
 
-        // get user
-        $user = UserData::findOrFail($id);
-
-        // get items for user
+        $user    = UserData::findOrFail($id);
         $itemIds = Item::where('seller_id', $id)->pluck('item_id');
 
-        // get all swap and delete it
+        // Delete all swaps related to user or their items
         Swap::where('requester_id', $id)
             ->orWhere('receiver_id', $id)
             ->orWhereIn('requested_item_id', $itemIds)
             ->delete();
 
-        // get transaction id for user
+        // Delete all transactions related to user
         $transactionIds = Transaction::where('buyer_id', $id)
             ->orWhere('seller_id', $id)
             ->pluck('transaction_id');
 
-        // delete all transaction
         Transaction_items::whereIn('transaction_id', $transactionIds)->delete();
         Transaction::whereIn('transaction_id', $transactionIds)->delete();
 
-        // delete item
+        // Delete user's items then the user
         Item::where('seller_id', $id)->delete();
-
-        // delete user
         $user->delete();
 
         return response()->json(['message' => 'Deleted!']);

@@ -70,10 +70,6 @@
                         </form>
                         <hr class="my-4">
                         <div class="text-center">
-                            <a color="black" href="{{ route('forget') }}"
-                                class="mainColor fw-bolder text-decoration-none">Forgot
-                                password?</a>
-                            <span class="mx-2">|</span>
                             <a href="{{ route('register') }}" class="text-decoration-none mainColor fw-bolder">Create
                                 new
                                 account</a>

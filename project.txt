@@ -10,7 +10,7 @@
     # Create Models                                     Done
     # Multiply Authentication                           Done
     # Create Controllers                                Done
-    # Run CLI : php artisan storage:link
+    # Run CLI : php artisan storage:link                Done
     # Handel SESSION_LIFETIME = 20000                   Done
     # Change time-zone of project to "Africa/Cairo"     Done
 
@@ -61,24 +61,6 @@
         => requested_item_id [FK -> Items.item_id]
         => cash_topup_amount [double]
         => status Enum["pending", "accepted", "rejected"]
-
-    @ Swap_Offer_Items
-        => swap_offer_item_id
-        => swap_id [FK -> Swap_Requests.swap_id]
-        => item_id [FK -> Items.item_id]
-        => offered_by_user_id [FK -> Users.user_id]
-
-    @ Notifications
-        => notification_id
-        => user_id [FK -> Users.user_id]
-        => title [string]
-        => message [text]
-        => type [string]
-        => is_read [boolean : false]
-
-    @ Sustainability_Reports
-        => report_id
-        => transaction_id [FK -> Transactions.transaction_id]
     
 ------------------------- Permissions -------------------------
 
@@ -88,22 +70,18 @@
         * View All Transactions             Done
         * View Sustainability Reports       Done
         * View All Items                    Done
-        * Monitor Platform Activity         
+        * Monitor Platform Activity         Done
 
     @ Seller
         * Register & Login                  Done
-        * Manage Profile                    
         * Add New Items                     Done
         * Edit Own Items                    Done
-        * Delete Own Items                  
+        * Delete Own Items                  Done
         * View Own Transactions             Done
         * Accept / Reject Swap Requests     Done
-        * Offer Items For Swap              Done
-        * Update Item Status                Done
 
     @ Buyer
         * Register & Login                  Done
-        * Manage Profile
         * Browse Items                      Done
         * Search & Filter Items             Done
         * Buy Items                         Done

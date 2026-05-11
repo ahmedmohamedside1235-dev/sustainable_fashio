@@ -26,15 +26,15 @@
             <div class="collapse navbar-collapse" id="nav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a class="nav-link" href="{{ route('home') }}">
-                            <i class="fas fa-home me-1"></i>Home</a></li>
+                            Home</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ route('collections') }}">
-                            <i class="fas fa-tshirt me-1"></i>Collections</a></li>
+                            Collections</a></li>
                     <li class="nav-item"><a class="nav-link active" href="{{ route('admin.dashboard') }}">
-                            <i class="fas fa-shield-alt me-1"></i>Dashboard</a></li>
+                            Dashboard</a></li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="javascript:void(0)" data-bs-toggle="dropdown"
                             role="button">
-                            <i class="fas fa-user-shield me-1"></i>
+                            
                             {{ Auth::guard('user')->user()->name }}
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
@@ -302,10 +302,10 @@
                                 <td style="color:#aaa;font-size:12px;">{{ $user->created_at->format('d M Y') }}</td>
                                 <td>
                                     @if ($user->user_id === Auth::guard('user')->id())
-                                        <button  hidden class="btn-edit">
+                                        <button hidden class="btn-edit">
                                             <i class="fas fa-edit"></i>
                                         </button>
-                                        <button  hidden class="btn-delete">
+                                        <button hidden class="btn-delete">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     @else
@@ -313,8 +313,7 @@
                                             onclick="openEditUser({{ $user->user_id }}, '{{ $user->name }}', '{{ $user->email }}', '{{ $user->phone }}', '{{ $user->role }}')">
                                             <i class="fas fa-edit"></i>
                                         </button>
-                                        <button class="btn-delete"
-                                            onclick="deleteUser({{ $user->user_id }}, this)">
+                                        <button class="btn-delete" onclick="deleteUser({{ $user->user_id }}, this)">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     @endif
@@ -533,6 +532,10 @@
                 </div>
 
             </div>
+            <a href="{{ route('admin.export.pdf') }}" target="_blank"
+                style="display:inline-block;padding:9px 18px;background:#198754;color:#fff;border-radius:9px;font-size:13px;font-weight:600;text-decoration:none;margin-bottom:20px;">
+                📄 Export Report
+            </a>
         </div>
     </div>
 
@@ -542,19 +545,19 @@
             <h3><i class="fas fa-edit me-2" style="color:#198754;"></i>Edit User</h3>
             <input type="hidden" id="editUserId" name="">
             <label>Name</label>
-            <input type="text" id="editName" placeholder="Name" name="name" value="{{old('name')}}">
+            <input type="text" id="editName" placeholder="Name" name="name" value="{{ old('name') }}">
             @error('name')
-                <p class="alert alert-danger fs-6 mt-3">{{ $message }}</p>                
+                <p class="alert alert-danger fs-6 mt-3">{{ $message }}</p>
             @enderror
             <label>Email</label>
-            <input type="email" id="editEmail" placeholder="Email" name="email" value="{{old('email')}}">
+            <input type="email" id="editEmail" placeholder="Email" name="email" value="{{ old('email') }}">
             @error('email')
-                <p class="alert alert-danger fs-6 mt-3">{{ $message }}</p>                
+                <p class="alert alert-danger fs-6 mt-3">{{ $message }}</p>
             @enderror
             <label>Phone</label>
-            <input type="text" id="editPhone" placeholder="Phone" name="phone" value="{{old('phone')}}">
+            <input type="text" id="editPhone" placeholder="Phone" name="phone" value="{{ old('phone') }}">
             @error('phone')
-                <p class="alert alert-danger fs-6 mt-3">{{ $message }}</p>                
+                <p class="alert alert-danger fs-6 mt-3">{{ $message }}</p>
             @enderror
             <label>Role</label>
             <select id="editRole">
@@ -568,6 +571,7 @@
             </div>
         </div>
     </div>
+
 
     <div id="toast"></div>
 

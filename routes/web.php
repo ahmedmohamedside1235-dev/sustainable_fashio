@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\AddItemController;
 use App\Http\Controllers\Admin\AdminController;
-use App\Http\Controllers\Auth\Forget_PasswordController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\CollectionsController;
@@ -22,10 +21,6 @@ Route::middleware('nocache')->group(function () {
     Route::get('/auth/register', [RegisterController::class, 'index'])->name('register');
     Route::post('/auth/register', [RegisterController::class, 'register'])->name('register.submit');
 
-// Forget password
-    Route::get('/auth/forget', [Forget_PasswordController::class, 'index'])->name('forget');
-    Route::post('/auth/forget', [Forget_PasswordController::class, 'forget'])->name('forget.submit');
-
     /* ======== Home Page ======== */
     Route::get('/', function () {
         return view('index');
@@ -33,8 +28,8 @@ Route::middleware('nocache')->group(function () {
 
     Route::middleware('auth:user')->group(function () {
         /* ======== Add Item ======== */
-        Route::get('/auth/add_item', [AddItemController::class, 'add_item'])->name('add_item');
-        Route::post('/auth/add_item_submit', [AddItemController::class, 'add_item_store'])->name('add_item_submit');
+        Route::get('/user/add_item', [AddItemController::class, 'add_item'])->name('add_item');
+        Route::post('/user/add_item_submit', [AddItemController::class, 'add_item_store'])->name('add_item_submit');
 
         /* ======== Collections ======== */
         Route::get('/user/collections', [UserController::class, 'indexCollection'])->name('collections');
@@ -67,5 +62,7 @@ Route::middleware('nocache')->group(function () {
         Route::post('/admin/items/{id}/delete', [AdminController::class, 'deleteItem'])->name('admin.items.delete');
         Route::post('/admin/users/{id}', [AdminController::class, 'updateUser'])->name('admin.users.update');
         Route::post('/admin/users/{id}/delete', [AdminController::class, 'deleteUser'])->name('admin.users.delete');
+        Route::get('/admin/users/search',  [AdminController::class, 'searchUsers'])->name('admin.users.search');
+        Route::get('/admin/export-pdf',    [AdminController::class, 'exportPdf'])->name('admin.export.pdf');
     });
 });

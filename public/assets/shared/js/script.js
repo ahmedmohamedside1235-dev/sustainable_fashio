@@ -107,13 +107,13 @@ function render() {
     if (!allItems.length) {
         container.innerHTML =
             (userRole === 'seller')
-            ? `<div style="text-align:center;padding:60px;grid-column:1/-1;">
+                ? `<div style="text-align:center;padding:60px;grid-column:1/-1;">
                     <p style="color:#aaa;font-size:16px;margin-bottom:16px;">You have no items yet</p>
                     <a href="${addItemUrl}" style="background:#198754;color:#fff;padding:10px 24px;border-radius:10px;text-decoration:none;font-weight:600;">
                     + Add your first item
                     </a>
                 </div>`
-            : `<p style="text-align:center;padding:40px;color:#aaa;grid-column:1/-1;">No items found</p>`;
+                : `<p style="text-align:center;padding:40px;color:#aaa;grid-column:1/-1;">No items found</p>`;
         return;
     }
 
@@ -157,6 +157,7 @@ function openSwapModal(itemId, ownerId) {
 function sendSwapOffer() {
     let offer = document.getElementById("offerInput");
     let modal = document.getElementById("swapModal");
+    let sendBtn = document.getElementById("sendOffer");
 
     if (!offer.value || +(offer.value) <= 0) {
         document.querySelector("p.swap.alert").classList.remove("d-none");
@@ -164,8 +165,8 @@ function sendSwapOffer() {
     }
     document.querySelector("p.swap.alert").classList.add("d-none");
     let itemId = modal.getAttribute("data-item-id");
-    document.getElementById("sendOffer").setAttribute('disabled', true);
-
+    sendBtn.disabled = true;
+    sendBtn.textContent = "Sending...";
     $.ajax({
         url: '/swap/store',
         method: 'POST',
@@ -179,7 +180,10 @@ function sendSwapOffer() {
         },
         error: function () {
             showToast('❌ Failed to send swap', '#dc3545');
-            document.getElementById("sendOffer").removeAttribute('disabled');
+        },
+        complete: function () {
+            sendBtn.disabled = false;
+            sendBtn.textContent = "Send";
         }
     });
 }
@@ -315,7 +319,6 @@ function searchItems() {
 }
 window.searchItems = searchItems;
 
-
 function deleteMyItem(itemId, btn) {
     if (!confirm('Delete this item?')) return;
 
@@ -326,6 +329,17 @@ function deleteMyItem(itemId, btn) {
         success: function () {
             btn.closest('.card').remove();
             showToast('✅ Item deleted!', '#198754');
+            if (!allItems.length) {
+                container.innerHTML =
+                    (userRole === 'seller') ?
+                    `<div style="text-align:center;padding:60px;grid-column:1/-1;">
+                        <p style="color:#aaa;font-size:16px;margin-bottom:16px;">You have no items yet</p>
+                        <a href="${addItemUrl}" style="background:#198754;color:#fff;padding:10px 24px;border-radius:10px;text-decoration:none;font-weight:600;">
+                            + Add your first item
+                        </a>
+                    </div>`
+                    : `<p style="text-align:center;padding:40px;color:#aaa;grid-column:1/-1;">No items found</p>`;
+            }
         },
         error: function () {
             showToast('❌ Failed to delete', '#dc3545');

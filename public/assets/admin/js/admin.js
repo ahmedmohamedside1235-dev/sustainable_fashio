@@ -23,10 +23,35 @@ function filterItems() {
 function filterUsers() {
     let search = document.getElementById('userSearch').value.toLowerCase();
     let role = document.getElementById('userRole').value;
-    document.querySelectorAll('#usersBody tr[data-name]').forEach(function (row) {
-        let matchSearch = !search || row.dataset.name.includes(search) || row.dataset.email.includes(search);
-        let matchRole = !role || row.dataset.role === role;
-        row.style.display = matchSearch && matchRole ? '' : 'none';
+
+    $.ajax({
+        url: '/admin/users/search',
+        method: 'GET',
+        data: { query: search, role: role },
+        success: function (users) {
+            let tbody = document.getElementById('usersBody');
+            tbody.innerHTML = '';
+            users.forEach(function (u, i) {
+                let roleClass = u.role === 'admin' ? 'badge-purple' : (u.role === 'seller' ? 'badge-orange' : 'badge-blue');
+                tbody.innerHTML += `
+                    <tr data-name="${u.name.toLowerCase()}" data-email="${u.email.toLowerCase()}" data-role="${u.role}">
+                        <td style="color:#aaa;">${i + 1}</td>
+                        <td><strong>${u.name}</strong></td>
+                        <td style="color:#666;">${u.email}</td>
+                        <td style="color:#666;">${u.phone}</td>
+                        <td><span class="badge-pill ${roleClass}">${u.role}</span></td>
+                        <td style="color:#aaa;font-size:12px;">${u.created_at}</td>
+                        <td>
+                            <button class="btn-edit" onclick="openEditUser(${u.user_id}, '${u.name}', '${u.email}', '${u.phone}', '${u.role}')">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn-delete" onclick="deleteUser(${u.user_id}, this)">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>`;
+            });
+        }
     });
 }
 

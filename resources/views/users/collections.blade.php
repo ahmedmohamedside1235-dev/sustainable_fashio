@@ -94,9 +94,11 @@
             <input type="text" id="searchInput" placeholder="Search clothes.." onkeyup="searchItems()">
         </div>
     </div>
-
+    
     <!-- Cards Container -->
-    <div class="cards-container" id="cardsContainer"></div>
+    <div class="container">
+        <div class="cards-container" id="cardsContainer"></div>
+    </div>
     <div id="toast"></div>
 
     <div id="editItemModal" class="modal">
