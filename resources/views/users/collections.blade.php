@@ -28,15 +28,14 @@
                 <ul class="navbar-nav ms-auto ">
                     @if (Auth::guard('user')->check() && Auth::guard('user')->user()->role == 'admin')
                         <li class="nav-item"><a class="nav-link" href="{{ route('home') }}">
-                                <i class="fas fa-home me-1"></i>Home</a></li>
+                                Home</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ route('collections') }}">
-                                <i class="fas fa-tshirt me-1"></i>Collections</a></li>
+                                Collections</a></li>
                         <li class="nav-item"><a class="nav-link active" href="{{ route('admin.dashboard') }}">
-                                <i class="fas fa-shield-alt me-1"></i>Dashboard</a></li>
+                                Dashboard</a></li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                                 aria-expanded="false">
-                                <i class="fas fa-user-shield me-1"></i>
                                 {{ Auth::guard('user')->user()->name }}
                             </a>
                             <ul class="dropdown-menu">
@@ -94,7 +93,7 @@
             <input type="text" id="searchInput" placeholder="Search clothes.." onkeyup="searchItems()">
         </div>
     </div>
-    
+
     <!-- Cards Container -->
     <div class="container">
         <div class="cards-container" id="cardsContainer"></div>

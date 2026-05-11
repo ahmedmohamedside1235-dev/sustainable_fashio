@@ -34,7 +34,7 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="javascript:void(0)" data-bs-toggle="dropdown"
                             role="button">
-                            
+
                             {{ Auth::guard('user')->user()->name }}
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
@@ -262,7 +262,7 @@
 
             <div class="toolbar">
                 <input type="text" id="userSearch" placeholder="🔍 Search by name or email…"
-                    oninput="filterUsers()">
+                    oninput="debounceSearch()">
                 <select id="userRole" onchange="filterUsers()">
                     <option value="">All Roles</option>
                     <option value="buyer">Buyer</option>
@@ -575,6 +575,9 @@
 
     <div id="toast"></div>
 
+    <script>
+        const currentAdminId = {{ Auth::guard('user')->id() }};
+    </script>
     <script src="{{ asset('assets/shared/js/bootstrap.js') }}"></script>
     <script src="{{ asset('assets/shared/js/jquery.js') }}"></script>
     <script src="{{ asset('assets/admin/js/admin.js') }}"></script>

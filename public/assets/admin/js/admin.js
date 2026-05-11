@@ -20,6 +20,12 @@ function filterItems() {
 }
 
 // ── Filter Users ──
+let searchTimer;
+function debounceSearch() {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(filterUsers, 400);
+}
+
 function filterUsers() {
     let search = document.getElementById('userSearch').value.toLowerCase();
     let role = document.getElementById('userRole').value;
@@ -31,8 +37,24 @@ function filterUsers() {
         success: function (users) {
             let tbody = document.getElementById('usersBody');
             tbody.innerHTML = '';
+
+            if (!users.length) {
+                tbody.innerHTML = '<tr class="empty-row"><td colspan="7">No users found</td></tr>';
+                return;
+            }
+
             users.forEach(function (u, i) {
                 let roleClass = u.role === 'admin' ? 'badge-purple' : (u.role === 'seller' ? 'badge-orange' : 'badge-blue');
+
+                // الـ admin اللي لوجن مش بيشوف أزرار على نفسه
+                let actions = u.user_id === currentAdminId ? '' : `
+                    <button class="btn-edit" onclick="openEditUser(${u.user_id}, '${u.name}', '${u.email}', '${u.phone}', '${u.role}')">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn-delete" onclick="deleteUser(${u.user_id}, this)">
+                        <i class="fas fa-trash"></i>
+                    </button>`;
+
                 tbody.innerHTML += `
                     <tr data-name="${u.name.toLowerCase()}" data-email="${u.email.toLowerCase()}" data-role="${u.role}">
                         <td style="color:#aaa;">${i + 1}</td>
@@ -41,14 +63,7 @@ function filterUsers() {
                         <td style="color:#666;">${u.phone}</td>
                         <td><span class="badge-pill ${roleClass}">${u.role}</span></td>
                         <td style="color:#aaa;font-size:12px;">${u.created_at}</td>
-                        <td>
-                            <button class="btn-edit" onclick="openEditUser(${u.user_id}, '${u.name}', '${u.email}', '${u.phone}', '${u.role}')">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="btn-delete" onclick="deleteUser(${u.user_id}, this)">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </td>
+                        <td>${actions}</td>
                     </tr>`;
             });
         }
@@ -72,17 +87,16 @@ function deleteItem(id, btn) {
     $.ajax({
         url: `/admin/items/${id}/delete`,
         method: 'POST',
-        headers: { 'X-CSRF-TOKEN': csrfToken},
+        headers: { 'X-CSRF-TOKEN': csrfToken },
         success: function (data) {
             btn.closest('tr').remove();
             showToast('✅ Item deleted');
-            setTimeout(() => {
-                location.reload();
-            }, 300);
+            setTimeout(() => { location.reload(); }, 300);
         },
         error: function (error) {
             console.log(error);
-            showToast('❌ Failed', '#dc3545'); }
+            showToast('❌ Failed', '#dc3545');
+        }
     });
 }
 
@@ -92,13 +106,11 @@ function deleteUser(id, btn) {
     $.ajax({
         url: `/admin/users/${id}/delete`,
         method: 'POST',
-        headers: { 'X-CSRF-TOKEN': csrfToken, 'X-HTTP-Method-Override': 'POST' },
+        headers: { 'X-CSRF-TOKEN': csrfToken },
         success: function (data) {
             btn.closest('tr').remove();
             location.reload();
-            setTimeout(() => {
-                showToast('✅ User deleted');
-            }, 1000);
+            setTimeout(() => { showToast('✅ User deleted'); }, 1000);
         },
         error: function (data) {
             console.log(data);
@@ -141,9 +153,7 @@ function saveUser() {
         },
         error: function (error) {
             showToast('❌ Failed', '#dc3545');
-            setTimeout(() => {
-                showToast('❌ The email has already been taken', '#dc3545');
-            }, 700);
+            setTimeout(() => { showToast('❌ The email has already been taken', '#dc3545'); }, 700);
         }
     });
 }
